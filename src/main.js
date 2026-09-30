@@ -97,7 +97,7 @@ function analyzeSalesData(data, options) {
       sellerStat.revenue += revenue;
 
       // Считаем прибыль (Выручка - Себестоимость)
-      if (product && product.purchase_price) {
+      if (product.purchase_price) {
         const costAmount = product.purchase_price * item.quantity;
         sellerStat.profit += (revenue - costAmount);
       }
