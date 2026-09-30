@@ -114,7 +114,7 @@ receipt.items.forEach(item => {
     const percent = calculateBonus(index, totalSellers, fullSellerData);
     const bonusInRubles = seller.profit * (percent / 100);
   
-  seller.bonus = +bonusInRubles.toFixed(2);
+  seller.bonus = +bonusInRubles;
 
     const topProducts = Object.entries(seller.products_sold)
     .sort((a, b) => b[1] - a[1]) 
