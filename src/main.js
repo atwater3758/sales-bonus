@@ -61,7 +61,7 @@ function analyzeSalesData(data, options) {
         if (typeof calculateRevenue !== 'function' || typeof calculateBonus !== 'function') {
         throw new Error('calculateRevenue и calculateBonus должны быть функциями');
     } 
-    
+
     // @TODO: Индексация продавцов и товаров для быстрого доступа
         const productsMap = {}; 
         data.products.forEach(product => { productsMap[product.sku] = product; });
@@ -146,4 +146,3 @@ function analyzeSalesData(data, options) {
 
   return result;
 }
-
