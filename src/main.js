@@ -17,20 +17,16 @@ function calculateSimpleRevenue(purchase, _product) {
  * @param seller карточка продавца
  * @returns {number}
  */
-function calculateBonusByProfit(index, total, seller, profit) {
-    // @TODO: Расчет бонуса от позиции в рейтинге
-
-    let percent = 0;
-    if (index === 0) { 
-        percent = 15; 
-    } else if (index === 1 || index === 2) { 
-        percent = 10; 
-    } else if (index === total - 1) { 
-        percent = 0; 
-    } else { percent = 5; 
-
-    }
-   return profit * (percent / 100);
+function calculateBonusByProfit(index, total, seller) {
+  if (!seller) return 0;
+  
+  let percent = 0;
+  if (index === 0) percent = 15;
+  else if (index === 1 || index === 2) percent = 10;
+  else if (index === total - 1) percent = 0;
+  else percent = 5;
+  
+  return percent; 
 } 
     
 
@@ -131,12 +127,12 @@ function analyzeSalesData(data, options) {
       ? `${fullSellerData.first_name} ${fullSellerData.last_name}` 
       : 'Unknown Seller';
 
-    const bonus = calculateBonus(index, totalSellers, fullSellerData, stat.profit);
-
-        const topProducts = Object.entries(stat.products_sold)
-      .sort((a, b) => b[1] - a[1]) 
-      .slice(0, 10)                
-      .map(entry => entry[0]);
+    const percent = calculateBonus(index, totalSellers, fullSellerData);
+    const bonusInRubles = stat.profit * (percent / 100);
+    const topProducts = Object.entries(stat.products_sold)
+    .sort((a, b) => b[1] - a[1]) 
+    .slice(0, 10)                
+    .map(entry => entry[0]);
 
     // @TODO: Подготовка итоговой коллекции с нужными полями
     result.push({
@@ -146,7 +142,7 @@ function analyzeSalesData(data, options) {
       profit: +stat.profit.toFixed(2),
       sales_count: stat.sales_count,
       top_products: topProducts,
-      bonus: +bonus.toFixed(2) 
+      bonus: +bonusInRubles.toFixed(2) 
     });
   });
 
