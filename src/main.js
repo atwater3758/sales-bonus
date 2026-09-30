@@ -78,17 +78,20 @@ function analyzeSalesData(data, options) {
             sales_count: 0, 
             products_sold: {} }));
         const statsMap = {}; 
-        sellerStats.forEach(stat => { statsMap[stat.id] = stat; });
+    sellerStats.forEach(stat => { 
+    statsMap[stat.seller_id] = stat; });
 
     // @TODO: Расчет выручки и прибыли для каждого продавца
        data.purchase_records.forEach(receipt => {
-        receipt.items.forEach(item => {
-        const product = productsMap[item.sku];
-        const sellerId = receipt.seller_id;
-        const sellerStat = statsMap[sellerId];
-            if (!sellerStat || !product) {
+    receipt.items.forEach(item => {
+      const product = productsMap[item.sku];
+      const sellerId = receipt.seller_id;
+      const sellerStat = statsMap[sellerId];
+
+      // --- ПРОВЕРКИ ДЛЯ ОТЛАДКИ ---
+      if (!sellerStat || !product)
         return; 
-      }
+       
 
       // Считаем выручку за эту одну покупку
         const revenue = calculateRevenue(item, product);
