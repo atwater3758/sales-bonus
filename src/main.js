@@ -111,9 +111,12 @@ record.items.forEach(item => {
   seller.bonus = +bonusInRubles.toFixed(2);
 
    const topProducts = Object.entries(seller.products_sold)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 10)
-    .map(entry => entry[0]);
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 10)
+  .map(entry => ({      
+    sku: entry[0],
+    quantity: entry[1]
+  }));
 
   seller.top_products = topProducts;
 }); 
