@@ -69,39 +69,33 @@ function analyzeSalesData(data, options) {
     statsMap[stat.seller_id] = stat; });
 
     // @TODO: Расчет выручки и прибыли для каждого продавца
-  data.purchase_records.forEach(receipt => {
-    const sellerId = receipt.seller_id;
+  data.purchase_records.forEach(record => {
+    const sellerId = record.seller_id;
     const sellerStat = statsMap[sellerId];
 
-    // Защита: если продавец не найден, пропускаем чек
     if (!sellerStat) return;
 
     sellerStat.sales_count += 1;
 
-receipt.items.forEach(item => {
-    const product = productIndex[item.sku];
-      
-      // Защита: если товара нет, пропускаем позицию
-    if (!product) return;
+record.items.forEach(item => {
+      const product = productIndex[item.sku];
+      if (!product) return;
 
-      // Считаем выручку
-    const revenue = calculateRevenue(item, product);
+      const revenue = calculateRevenue(item, product);
       sellerStat.revenue += revenue;
 
-      // Считаем прибыль (Выручка - Себестоимость)
-    if (product.purchase_price) {
-    const costAmount = product.purchase_price * item.quantity;
+      if (product.purchase_price) {
+        const costAmount = product.purchase_price * item.quantity;
         sellerStat.profit += (revenue - costAmount);
-    }
+      }
 
-      // Накопление товаров для топ-листа
-    const sku = item.sku;
-    if (!sellerStat.products_sold[sku]) {
+      const sku = item.sku;
+      if (!sellerStat.products_sold[sku]) {
         sellerStat.products_sold[sku] = 0;
-    }
-        sellerStat.products_sold[sku] += item.quantity;
+      }
+      sellerStat.products_sold[sku] += item.quantity;
     });
-  }); 
+  });  
 
  // @TODO: Сортировка продавцов по прибыли
         sellerStats.sort((a, b) => b.profit - a.profit);
@@ -116,21 +110,21 @@ receipt.items.forEach(item => {
   
   seller.bonus = +bonusInRubles.toFixed(2);
 
-    const topProducts = Object.entries(seller.products_sold)
-    .sort((a, b) => b[1] - a[1]) 
-    .slice(0, 10)                
-    .map(entry => ({ sku: entry[0], quantity: entry[1] }));
+   const topProducts = Object.entries(seller.products_sold)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
+    .map(entry => entry[0]);
 
   seller.top_products = topProducts;
 }); 
     // @TODO: Подготовка итоговой коллекции с нужными полями
     return sellerStats.map(seller => ({
-        seller_id: seller.seller_id,
-        name: seller.name,
-        revenue: +seller.revenue.toFixed(2),
-        profit: +seller.profit.toFixed(2),
-        sales_count: seller.sales_count,
-        top_products: seller.top_products,
-        bonus: seller.bonus
+    seller_id: seller.seller_id,
+    name: seller.name,
+    revenue: +seller.revenue.toFixed(2),
+    profit: +seller.profit.toFixed(2),
+    sales_count: seller.sales_count,
+    top_products: seller.top_products,
+    bonus: seller.bonus
   }));
 }
