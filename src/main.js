@@ -80,10 +80,6 @@ function analyzeSalesData(data, options) {
         acc[product.sku] = product;
         return acc;
     }, {}); 
-    
-    const statsMap = {}; 
-    sellerStats.forEach(stat => { 
-    statsMap[stat.seller_id] = stat; });
 
     // @TODO: Расчет выручки и прибыли для каждого продавца
 data.purchase_records.forEach(record => {
