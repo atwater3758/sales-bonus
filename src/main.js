@@ -24,9 +24,12 @@ function calculateBonusByProfit(index, total, seller) {
 
     if (!seller) return 0;
 
-  if (index === 0) return 15;
-  if (index === 1 || index === 2) return 10;
-  if (index === total - 1) return 0;
+  if (index === 0) 
+    return 15;
+  if (index === 1 || index === 2) 
+    return 10;
+  if (index === total - 1) 
+    return 0;
   
   return 5;
 } 
@@ -59,8 +62,6 @@ function analyzeSalesData(data, options) {
         throw new Error('calculateRevenue и calculateBonus должны быть функциями');
     } 
 
-// @TODO: Индексация продавцов и товаров для быстрого доступа
-
     // @TODO: Подготовка промежуточных данных для сбора статистики
     const sellerStats = data.sellers.map(seller => ({ 
         seller_id: seller.id, 
@@ -71,12 +72,13 @@ function analyzeSalesData(data, options) {
         products_sold: {} 
     }));
 
+    // @TODO: Индексация продавцов и товаров для быстрого доступа
+
     const sellerIndex = sellerStats.reduce((acc, seller) => {
         acc[seller.seller_id] = seller;
         return acc;
     }, {});
 
-// productIndex: ключ = sku, значение = товар
     const productIndex = data.products.reduce((acc, product) => {
         acc[product.sku] = product;
         return acc;
@@ -125,9 +127,9 @@ data.purchase_records.forEach(record => {
   seller.bonus = +bonusInRubles.toFixed(2);
 
    const topProducts = Object.entries(seller.products_sold)
+    .map(([sku, quantity]) => ({ sku, quantity}))
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 10)
-    .map(([sku, quantity]) => ({ sku, quantity}));
+    .slice(0, 10);
 
   seller.top_products = topProducts;
 }); 
