@@ -22,16 +22,17 @@ function calculateBonusByProfit(index, total, seller) {
 
     // @TODO: Расчет бонуса от позиции в рейтинге
 
-    if (!seller) return 0;
+    const { profit } = seller;
 
-  if (index === 0) 
-    return 15;
-  if (index === 1 || index === 2) 
-    return 10;
-  if (index === total - 1) 
+  if (index === 0) {
+    return profit * 0.15;
+  } else if (index === 1 || index === 2) {
+    return profit * 0.10;
+  } else if (index === total - 1) {
     return 0;
-  
-  return 5;
+  } else {
+    return profit * 0.05;
+  }
 } 
 
 /**
@@ -88,7 +89,7 @@ data.purchase_records.forEach(record => {
     const sellerStat = sellerIndex[sellerId];
     
     if (!sellerStat) return;
-    
+
     sellerStat.sales_count += 1;
     sellerStat.revenue += record.total_amount;
 
@@ -120,8 +121,8 @@ record.items.forEach(item => {
 
   sellerStats.forEach((seller, index) => {
     const fullSellerData = sellerIndex[seller.seller_id];
-    const percent = calculateBonus(index, totalSellers, fullSellerData);
-    const bonusInRubles = seller.profit * (percent / 100);
+    const bonusInRubles = calculateBonus(index, totalSellers, fullSellerData);
+    seller.bonus = +bonusInRubles.toFixed(2);
 
     // Округляем бонус до 2 знаков
     seller.bonus = +bonusInRubles.toFixed(2);
