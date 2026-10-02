@@ -19,9 +19,10 @@ function calculateSimpleRevenue(purchase, _product) {
  * @returns {number}
  */
 function calculateBonusByProfit(index, total, seller) {
-    if (!seller) return 0;
 
-   const { profit } = seller;
+    // @TODO: Расчет бонуса от позиции в рейтинге
+
+    if (!seller) return 0;
 
   if (index === 0) return 15;
   if (index === 1 || index === 2) return 10;
