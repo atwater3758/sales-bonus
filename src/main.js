@@ -46,11 +46,9 @@ function analyzeSalesData(data, options) {
    if (
   !data ||
   !Array.isArray(data.sellers) ||
-  !Array.isArray(data.customers) ||
   !Array.isArray(data.products) ||
   !Array.isArray(data.purchase_records) ||
   data.sellers.length === 0 ||
-  data.customers.length === 0 ||
   data.products.length === 0 ||
   data.purchase_records.length === 0
 ) {
@@ -132,9 +130,9 @@ data.purchase_records.forEach(record => {
   seller.bonus = +bonusInRubles.toFixed(2);
 
    const topProducts = Object.entries(seller.products_sold)
-    .map(([sku, quantity]) => ({ sku, quantity}))
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 10);
+    .slice(0, 10)
+    .map(([sku, quantity]) => ({ sku, quantity}));
 
   seller.top_products = topProducts;
 }); 
