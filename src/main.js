@@ -38,7 +38,14 @@ function calculateBonusByProfit(index, total, seller) {
 function analyzeSalesData(data, options) {
     
  // @TODO: Проверка входных данных
-    if (!data || !Array.isArray(data.purchase_records) || !Array.isArray(data.products) || !Array.isArray(data.sellers) || data.purchase_records.length === 0 || data.products.length === 0 || data.sellers.length === 0) { throw new Error('Некорректные входные данные'); } 
+    if (!data || 
+        !Array.isArray(data.purchase_records) || 
+        !Array.isArray(data.products) || 
+        !Array.isArray(data.sellers) || 
+        data.purchase_records.length === 0 || 
+        data.products.length === 0 || 
+        data.sellers.length === 0) { 
+            throw new Error('Некорректные входные данные'); } 
 // @TODO: Проверка наличия опций
     if (!options || typeof options !== 'object') {throw new Error('Опции должны быть объектом');}
     const { calculateRevenue, calculateBonus } = options;
@@ -103,7 +110,7 @@ record.items.forEach(item => {
 // @TODO: Назначение премий на основе ранжирования
     const totalSellers = sellerStats.length; 
 
-        sellerStats.forEach((seller, index) => {
+        sellerStats.forEach((seller, index) => { 
     const fullSellerData = sellerIndex[seller.seller_id];
     const percent = calculateBonus(index, totalSellers, fullSellerData);
     const bonusInRubles = seller.profit * (percent / 100);
@@ -111,12 +118,9 @@ record.items.forEach(item => {
   seller.bonus = +bonusInRubles.toFixed(2);
 
    const topProducts = Object.entries(seller.products_sold)
-  .sort((a, b) => b[1] - a[1])
-  .slice(0, 10)
-  .map(entry => ({      
-    sku: entry[0],
-    quantity: entry[1]
-  }));
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
+    .map(([sku, quantity]) => ({ sku, quantity}));
 
   seller.top_products = topProducts;
 }); 
@@ -128,6 +132,6 @@ record.items.forEach(item => {
     profit: +seller.profit.toFixed(2),
     sales_count: seller.sales_count,
     top_products: seller.top_products,
-    bonus: seller.bonus
+    bonus: +seller.bonus.toFixed(2)
   }));
 }
